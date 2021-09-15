@@ -14,7 +14,7 @@ import (
 
 var opts struct {
 	Topic             string `short:"t" long:"topic" env:"TOPIC" default:"output" description:"name of the topic"`
-	BrokerList        string `short:"b" long:"brokerlist" env:"BROKER_LIST" default:"localhost:9092" description:"Kafka broker list"`
+	BrokerList        string `short:"b" long:"brokerList" env:"BROKER_LIST" default:"localhost:9092" description:"Kafka broker list"`
 	Mode              string `long:"mode" env:"MODE" default:"producer" description:"Mode: producer or consumer"`
 	SchemaID          int    `long:"schemaId" env:"SCHEMA_ID" description:"Schema ID"`
 	SchemaRegistryURL string `long:"schemaRegistryURL" env:"SCHEMA_REGISTRY_URL" default:"http://localhost:8081" description:"Schema Registry URL"`
@@ -116,6 +116,6 @@ func main() {
 		}
 
 	} else {
-		log.Fatalf("Invalid mode")
+		log.Fatalf("Invalid mode. Please specify producer or consumer")
 	}
 }
