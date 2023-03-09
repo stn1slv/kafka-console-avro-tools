@@ -2,8 +2,11 @@ package main
 
 import (
 	"context"
+	"crypto/tls"
+	"crypto/x509"
 	"encoding/binary"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 	"os/signal"
@@ -24,6 +27,8 @@ var opts struct {
 	Message           string `short:"m" long:"msg" env:"MSG" description:"Message"`
 	MessageFromFile   string `short:"f" long:"file" default:"" env:"FILE" description:"Filename"`
 	Group             string `short:"g" long:"group" env:"GROUP" default:"kafka-console-avro-tools" description:"Consumer group"`
+	Auth              string `short:"a" long:"auth" env:"AUTH" default:"wo" description:"Auth type"`
+	TLSCertsDir       string `short:"x" long:"certDir" env:"TLS_CERTS_DIR" default:"./" description:"Directory with TLS Certificates"`
 }
 
 func failOnError(err error, msg string) {
@@ -46,6 +51,15 @@ func main() {
 	config.Producer.Return.Successes = true
 	config.ClientID = "go-kafka-consumer"
 	config.Consumer.Return.Errors = true
+
+	if opts.Auth == "TLS" {
+		tlsConfig, err := NewTLSConfig(opts.TLSCertsDir+"client.cer.pem",
+			opts.TLSCertsDir+"client.key.pem", opts.TLSCertsDir+"server.cer.pem")
+		failOnError(err, "Error creating TLS config")
+		config.Net.TLS.Enable = true
+		config.Net.TLS.Config = tlsConfig
+	}
+
 	schemaRegistryClient := srclient.CreateSchemaRegistryClient(opts.SchemaRegistryURL)
 
 	if opts.Mode == "producer" {
@@ -185,4 +199,27 @@ func (consumer *Consumer) ConsumeClaim(session sarama.ConsumerGroupSession, clai
 	}
 
 	return nil
+}
+
+func NewTLSConfig(clientCertFile, clientKeyFile, caCertFile string) (*tls.Config, error) {
+	tlsConfig := tls.Config{}
+
+	// Load client cert
+	cert, err := tls.LoadX509KeyPair(clientCertFile, clientKeyFile)
+	if err != nil {
+		return &tlsConfig, err
+	}
+	tlsConfig.Certificates = []tls.Certificate{cert}
+
+	// Load CA cert
+	caCert, err := ioutil.ReadFile(caCertFile)
+	if err != nil {
+		return &tlsConfig, err
+	}
+	caCertPool := x509.NewCertPool()
+	caCertPool.AppendCertsFromPEM(caCert)
+	tlsConfig.RootCAs = caCertPool
+
+	tlsConfig.BuildNameToCertificate()
+	return &tlsConfig, err
 }
