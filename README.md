@@ -11,11 +11,11 @@ go build -o kafka-console-avro-tools
 ### Producer
 
 ```
-./kafka-console-avro-tools --brokerList=localhost:9092 --topic=topicName --schemaRegistryURL=http://localhost:8081 --mode=producer --schemaId=10 --msg='{"name":"Stas","address":"Moscow"}'
+./kafka-console-avro-tools --mode=producer --brokerList=localhost:9092 --topic=topicName --schemaRegistryURL=http://localhost:8081 --schemaId=10 --msg='{"name":"Stas","address":"Moscow"}'
 
 ```
 
 ### Consumer
 ```
-./kafka-console-avro-tools --brokerList=localhost:9092 --topic=topicName --schemaRegistryURL=http://localhost:8081 --mode=consumer 
+./kafka-console-avro-tools  --mode=consumer --brokerList=localhost:9092 --topic=topicName --schemaRegistryURL=http://localhost:8081
 ```
