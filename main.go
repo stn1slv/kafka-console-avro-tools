@@ -22,6 +22,7 @@ var opts struct {
 	SchemaID          int    `long:"schemaId" env:"SCHEMA_ID" description:"Schema ID"`
 	SchemaRegistryURL string `long:"schemaRegistryURL" env:"SCHEMA_REGISTRY_URL" default:"http://localhost:8081" description:"Schema Registry URL"`
 	Message           string `short:"m" long:"msg" env:"MSG" description:"Message"`
+	MessageFromFile   string `short:"f" long:"file" default:"" env:"FILE" description:"Filename"`
 	Group             string `short:"g" long:"group" env:"GROUP" default:"kafka-console-avro-tools" description:"Consumer group"`
 }
 
@@ -61,7 +62,16 @@ func main() {
 
 		// 3) Serialize the record using the schema provided by the client,
 		// making sure to include the schema id as part of the record.
-		value := []byte(opts.Message)
+		var value []byte
+		if opts.MessageFromFile != "" {
+			// Read message payload from a file
+			value, err = os.ReadFile(opts.MessageFromFile)
+			failOnError(err, "Error when opening file")
+			log.Printf("Reading message payload from a file: %s", opts.MessageFromFile)
+		} else {
+			// Read message payload from input parameter
+			value = []byte(opts.Message)
+		}
 		native, _, err := schema.Codec().NativeFromTextual(value)
 		failOnError(err, "NativeFromTextual error")
 		valueBytes, err := schema.Codec().BinaryFromNative(nil, native)
