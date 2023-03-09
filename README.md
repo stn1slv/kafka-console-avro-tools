@@ -18,16 +18,16 @@ curl -s -L 'http://localhost:8081/subjects/Kafka-value/versions' \
 ```
 ##### Send a message as a param
 ```
-./kafka-console-avro-tools --brokerList=localhost:9092 --schemaRegistryURL=http://localhost:8081 --mode=producer --schemaId=1 --msg='{"name":"Stas","address":"Moscow"}'
+./kafka-console-avro-tools --mode=producer --topic=topicName --brokerList=localhost:9092 --schemaRegistryURL=http://localhost:8081 --schemaId=1 --msg='{"name":"Stas","address":"Moscow"}'
 
 ```
 
 ##### Send a message from file
 ```
-./kafka-console-avro-tools --brokerList=localhost:9092 --schemaRegistryURL=http://localhost:8081 --mode=producer --schemaId=1 --file=examples/file.json
+./kafka-console-avro-tools --mode=producer --topic=topicName --brokerList=localhost:9092 --schemaRegistryURL=http://localhost:8081 --schemaId=1 --file=examples/file.json
 ```
 
 ### Consumer
 ```
-./kafka-console-avro-tools --brokerList=localhost:9092 --schemaRegistryURL=http://localhost:8081 --mode=consumer 
+./kafka-console-avro-tools --mode=consumer --topic=topicName --brokerList=localhost:9092 --schemaRegistryURL=http://localhost:8081
 ```
