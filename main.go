@@ -15,7 +15,8 @@ import (
 
 	sarama "github.com/Shopify/sarama"
 	flags "github.com/jessevdk/go-flags"
-	"github.com/riferrei/srclient"
+	goavro "github.com/linkedin/goavro/v2"
+	srclient "github.com/riferrei/srclient"
 )
 
 var opts struct {
@@ -86,9 +87,12 @@ func main() {
 			// Read message payload from input parameter
 			value = []byte(opts.Message)
 		}
-		native, _, err := schema.Codec().NativeFromTextual(value)
+
+		codec, err := goavro.NewCodecForStandardJSON(schema.Schema())
+		failOnError(err, "NewCodecForStandardJSON error")
+		native, _, err := codec.NativeFromTextual(value)
 		failOnError(err, "NativeFromTextual error")
-		valueBytes, err := schema.Codec().BinaryFromNative(nil, native)
+		valueBytes, err := codec.BinaryFromNative(nil, native)
 		failOnError(err, "BinaryFromNative error")
 
 		var recordValue []byte
@@ -201,6 +205,7 @@ func (consumer *Consumer) ConsumeClaim(session sarama.ConsumerGroupSession, clai
 	return nil
 }
 
+// Configuration for TLS Authentication
 func NewTLSConfig(clientCertFile, clientKeyFile, caCertFile string) (*tls.Config, error) {
 	tlsConfig := tls.Config{}
 

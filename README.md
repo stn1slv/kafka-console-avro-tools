@@ -1,6 +1,6 @@
 # kafka-console-avro-tools
 
-This is a CLI tool to send and receive Avro messages to and from Apache Kafka.
+This is a CLI tool to send and receive Avro messages to and from Apache Kafka with using Confluent Schema Registry.
 
 ### Build executable file
 
