@@ -88,7 +88,7 @@ func main() {
 			value = []byte(opts.Message)
 		}
 
-		codec, err := goavro.NewCodecForStandardJSON(schema.Schema())
+		codec, err := goavro.NewCodecForStandardJSONFull(schema.Schema())
 		failOnError(err, "NewCodecForStandardJSON error")
 		native, _, err := codec.NativeFromTextual(value)
 		failOnError(err, "NativeFromTextual error")
