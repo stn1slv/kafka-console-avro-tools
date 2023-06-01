@@ -54,6 +54,23 @@ Flags:
 - `-x, --certDir`: Directory with TLS Certificates (default: "./")
 - `--schemaRegistryURL`: Schema Registry URL (default: "http://localhost:8081")
 
+### Testing
+
+1. Register simple Avro schema
+```sh
+curl -s -L 'http://localhost:8081/subjects/Kafka-value/versions' \
+-H 'Content-Type: application/vnd.schemaregistry.v1+json' \
+-d '{"schema": "{\"type\":\"record\",\"name\":\"Record\",\"fields\":[{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"address\",\"type\":\"string\"}]}"}'
+```
+2. Produce a message to kafka topic
+```sh
+./kafka-avro producer --schemaId=1 --file examples/example.json
+```
+3. Consume messages from kafka topic
+```sh
+./kafka-avro consumer
+```
+
 ### License
 
 This project is licensed under the MIT License.
