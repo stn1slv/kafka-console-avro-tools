@@ -15,3 +15,4 @@
 # vendor/
 *.pem
 kafka-console-avro-tools
+kafka-avro
