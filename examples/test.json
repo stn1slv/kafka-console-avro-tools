@@ -1,0 +1,50 @@
+{
+    "specversion": "Retail-v1",
+    "dataschema": "Retail-Campaign-Schema",
+    "id": "1678277824299",
+    "source": "RTL-TALON1",
+    "time": "2023-03-08T13:17:04.299",
+    "type": "Retail-Campaign-Notification-Type",
+    "country": "DE",
+    "brand": "adidas",
+    "appName": "RTL-PROMO",
+    "eventType": "Updated",
+    "data": {
+        "campaignData": {
+            "campaignHeaderData": {
+                "campaignName": "KanavTest",
+                "campaignId": 1792,
+                "campaignDesc": "",
+                "applicationId": 3,
+                "storeIDList": [
+                    "0DEB",
+                    "0DEA"
+                ],
+                "startTime": null,
+                "endTime": null,
+                "campaignType": "PG",
+                "campaignStatus": "enabled",
+                "createdAt": "2023-03-01T12:28:52.024494Z",
+                "updatedAt": "2023-03-08T12:14:22.762812Z",
+                "updatedBy": "Kanav"
+            },
+            "partnerGroupData": {
+                "dealType": "E",
+                "dealDescription": "d",
+                "discountType": "Amount",
+                "discountValue": 10.0,
+                "thresholdType": "Amount",
+                "thresholdValue": 33.0,
+                "maxQuantity": null,
+                "promptMessages": null,
+                "pgIndicators": {
+                    "combineWithPromos": false,
+                    "noBestDeal": true
+                }
+            },
+            "promotionDealsData": null
+        },
+        "campaignsPriorityData": null,
+        "deletedCampaignData": null
+    }
+}
