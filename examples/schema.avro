@@ -1,0 +1,14 @@
+{
+  "type": "record",
+  "name": "Record",
+  "fields": [
+    {
+      "name": "name",
+      "type": "string"
+    },
+    {
+      "name": "address",
+      "type": "string"
+    }
+  ]
+}
