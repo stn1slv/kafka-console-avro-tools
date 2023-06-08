@@ -38,10 +38,10 @@ jobs:
         run: go get -v -t -d ./...
         
       - name: Build
-        run: go build -v -o myapp-${{ matrix.os }}
+        run: go build -v -o kafka-console-avro-tools-${{ matrix.goos }}-${{ matrix.goarch }}
         env:
-          GOOS: ${{ startsWith(matrix.os, 'ubuntu') && 'linux' || startsWith(matrix.os, 'macOS') && 'darwin' || 'windows' }}
-          GOARCH: amd64
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
           CGO_ENABLED: 0
           GO111MODULE: on
         
