@@ -1,4 +1,4 @@
-name: Go Application Release
+name: Release
 
 on:
   push:
@@ -7,29 +7,13 @@ on:
 
 jobs:
   build:
-    name: Build Go Application
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        include:
-          - os: ubuntu-amd64
-            goos: linux
-            goarch: amd64
-          - os: windows-amd64
-            goos: windows
-            goarch: amd64
-          - os: macOS-amd64
-            goos: darwin
-            goarch: amd64
-          - os: macOS-arm64
-            goos: darwin
-            goarch: arm64
-        go-version: [1.19]
+    name: Build
+    runs-on: ubuntu-latest
     steps:
       - name: Set up Go
         uses: actions/setup-go@v2
         with:
-          go-version: ${{ matrix.go-version }}
+          go-version: 1.19
         
       - name: Checkout code
         uses: actions/checkout@v2
@@ -37,14 +21,38 @@ jobs:
       - name: Get dependencies
         run: go get -v -t -d ./...
         
-      - name: Build ${{ matrix.os }}
-        run: go build -v -o kafka-console-avro-tools-${{ matrix.goos }}-${{ matrix.goarch }}
+      - name: Build Linux
+        run: go build -v -o kafka-console-avro-tools-linux-amd64
         env:
-          GOOS: ${{ matrix.goos }}
-          GOARCH: ${{ matrix.goarch }}
+          GOOS: linux
+          GOARCH: amd64
           CGO_ENABLED: 0
           GO111MODULE: on
-        
+      
+      - name: Build Windows
+        run: go build -v -o kafka-console-avro-tools-windows-amd64
+        env:
+          GOOS: windows
+          GOARCH: amd64
+          CGO_ENABLED: 0
+          GO111MODULE: on
+            
+      - name: Build MacOS (AMD64)
+        run: go build -v -o kafka-console-avro-tools-darwin-amd64
+        env:
+          GOOS: darwin
+          GOARCH: amd64
+          CGO_ENABLED: 0
+          GO111MODULE: on
+      
+      - name: Build MacOS (ARM64)
+        run: go build -v -o kafka-console-avro-tools-darwin-arm64
+        env:
+          GOOS: darwin
+          GOARCH: arm64
+          CGO_ENABLED: 0
+          GO111MODULE: on
+
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -56,13 +64,46 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Upload Release Asset ${{ matrix.os }}
-        id: upload-release-asset 
+      - name: Upload Release Asset Linux
+        id: upload-release-asset-linux
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./kafka-console-avro-tools-${{ matrix.goos }}-${{ matrix.goarch }}
-          asset_name: kafka-console-avro-tools-${{ matrix.goos }}-${{ matrix.goarch }}
+          asset_path: ./kafka-console-avro-tools-linux-amd64
+          asset_name: kafka-console-avro-tools-linux-amd64
+          asset_content_type: application/octet-stream
+
+      - name: Upload Release Asset Windows
+        id: upload-release-asset-windows
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./kafka-console-avro-tools-windows-amd64
+          asset_name: kafka-console-avro-tools-windows-amd64
+          asset_content_type: application/octet-stream
+      
+      - name: Upload Release Asset MacOS-AMD64
+        id: upload-release-asset-macos-amd64
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./kafka-console-avro-tools-darwin-amd64
+          asset_name: kafka-console-avro-tools-darwin-amd64
+          asset_content_type: application/octet-stream
+
+      - name: Upload Release Asset MacOS-ARM64
+        id: upload-release-asset-macos-arm64
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./kafka-console-avro-tools-darwin-arm64
+          asset_name: kafka-console-avro-tools-darwin-arm64
           asset_content_type: application/octet-stream
