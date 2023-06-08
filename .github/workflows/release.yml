@@ -12,16 +12,16 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: ubuntu-latest
+          - os: ubuntu-amd64
             goos: linux
             goarch: amd64
-          - os: windows-latest
+          - os: windows-amd64
             goos: windows
             goarch: amd64
-          - os: macOS-latest
+          - os: macOS-amd64
             goos: darwin
             goarch: amd64
-          - os: macOS-latest
+          - os: macOS-arm64
             goos: darwin
             goarch: arm64
         go-version: [1.19]
@@ -37,24 +37,14 @@ jobs:
       - name: Get dependencies
         run: go get -v -t -d ./...
         
-      - name: Build
-        run: go build -v -o myapp-${{ matrix.os }}
+      - name: Build ${{ matrix.os }}
+        run: go build -v -o kafka-console-avro-tools-${{ matrix.goos }}-${{ matrix.goarch }}
         env:
-          GOOS: ${{ startsWith(matrix.os, 'ubuntu') && 'linux' || startsWith(matrix.os, 'macOS') && 'darwin' || 'windows' }}
-          GOARCH: amd64
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
           CGO_ENABLED: 0
           GO111MODULE: on
-
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: kafka-console-avro-tools-${{ matrix.goos }}-${{ matrix.goarch }}
-          path: ./kafka-console-avro-tools-${{ matrix.goos }}-${{ matrix.goarch }}
-
-  release:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
+        
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -66,31 +56,13 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Download build artifacts
-        uses: actions/download-artifact@v2
-
-      - name: Upload Release Assets
-        uses: actions/github-script@v3
+      - name: Upload Release Asset ${{ matrix.os }}
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            const fs = require('fs');
-            const path = require('path');
-            const artifacts = fs.readdirSync(path.resolve(process.env.GITHUB_WORKSPACE));
-            const releaseId = ${{ steps.create_release.outputs.id }};
-            for (const artifact of artifacts) {
-              const artifactPath = path.resolve(process.env.GITHUB_WORKSPACE, artifact);
-              if (artifact.startsWith('kafka-console-avro-tools-') && fs.lstatSync(artifactPath).isFile()) {
-                await github.repos.uploadReleaseAsset({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  release_id: releaseId,
-                  name: artifact,
-                  data: fs.readFileSync(artifactPath),
-                  headers: {
-                    'content-type': 'application/octet-stream',
-                    'content-length': fs.statSync(artifactPath).size
-                  }
-                });
-              }
-            }
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./kafka-console-avro-tools-${{ matrix.goos }}-${{ matrix.goarch }}
+          asset_name: kafka-console-avro-tools-${{ matrix.goos }}-${{ matrix.goarch }}
+          asset_content_type: application/octet-stream
