@@ -5,7 +5,8 @@ name: Build & test
 
 on:
   push:
-    branches: [ "main" ]
+    branches-ignore: [ "main" ]
+    tags-ignore: 'v*'
   pull_request:
     branches: [ "main" ]
 
