@@ -77,12 +77,13 @@ jobs:
             const fs = require('fs');
             const path = require('path');
             const artifacts = fs.readdirSync(path.resolve(process.env.GITHUB_WORKSPACE));
+            const releaseId = ${{ steps.create_release.outputs.id }};
             for (const artifact of artifacts) {
               if (artifact.startsWith('kafka-console-avro-tools-')) {
                 await github.repos.uploadReleaseAsset({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
-                  release_id: context.payload.release.id,
+                  release_id: releaseId,
                   name: artifact,
                   data: fs.readFileSync(path.resolve(process.env.GITHUB_WORKSPACE, artifact)),
                   headers: {
