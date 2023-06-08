@@ -21,7 +21,7 @@ jobs:
       - name: Get dependencies
         run: go get -v -t -d ./...
         
-      - name: Build Linux
+      - name: Build for Linux
         run: go build -v -o kafka-console-avro-tools-linux-amd64
         env:
           GOOS: linux
@@ -29,7 +29,7 @@ jobs:
           CGO_ENABLED: 0
           GO111MODULE: on
       
-      - name: Build Windows
+      - name: Build for Windows
         run: go build -v -o kafka-console-avro-tools-windows-amd64
         env:
           GOOS: windows
@@ -37,7 +37,7 @@ jobs:
           CGO_ENABLED: 0
           GO111MODULE: on
             
-      - name: Build MacOS (AMD64)
+      - name: Build for MacOS (AMD64)
         run: go build -v -o kafka-console-avro-tools-darwin-amd64
         env:
           GOOS: darwin
@@ -45,7 +45,7 @@ jobs:
           CGO_ENABLED: 0
           GO111MODULE: on
       
-      - name: Build MacOS (ARM64)
+      - name: Build for MacOS (ARM64)
         run: go build -v -o kafka-console-avro-tools-darwin-arm64
         env:
           GOOS: darwin
@@ -64,7 +64,7 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Upload Release Asset Linux
+      - name: Upload Release Asset for Linux
         id: upload-release-asset-linux
         uses: actions/upload-release-asset@v1
         env:
@@ -75,7 +75,7 @@ jobs:
           asset_name: kafka-console-avro-tools-linux-amd64
           asset_content_type: application/octet-stream
 
-      - name: Upload Release Asset Windows
+      - name: Upload Release Asset for Windows
         id: upload-release-asset-windows
         uses: actions/upload-release-asset@v1
         env:
@@ -86,7 +86,7 @@ jobs:
           asset_name: kafka-console-avro-tools-windows-amd64
           asset_content_type: application/octet-stream
       
-      - name: Upload Release Asset MacOS-AMD64
+      - name: Upload Release Asset for MacOS (AMD64)
         id: upload-release-asset-macos-amd64
         uses: actions/upload-release-asset@v1
         env:
@@ -97,7 +97,7 @@ jobs:
           asset_name: kafka-console-avro-tools-darwin-amd64
           asset_content_type: application/octet-stream
 
-      - name: Upload Release Asset MacOS-ARM64
+      - name: Upload Release Asset for MacOS (ARM64)
         id: upload-release-asset-macos-arm64
         uses: actions/upload-release-asset@v1
         env:
