@@ -8,12 +8,16 @@ on:
 jobs:
   build:
     name: Build Go Application
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+        go-version: [1.16]
     steps:
       - name: Set up Go
         uses: actions/setup-go@v2
         with:
-          go-version: 1.19
+          go-version: ${{ matrix.go-version }}
         
       - name: Checkout code
         uses: actions/checkout@v2
@@ -22,9 +26,9 @@ jobs:
         run: go get -v -t -d ./...
         
       - name: Build
-        run: go build -v .
+        run: go build -v -o myapp-${{ matrix.os }}
         env:
-          GOOS: linux
+          GOOS: ${{ startsWith(matrix.os, 'ubuntu') && 'linux' || startsWith(matrix.os, 'macOS') && 'darwin' || 'windows' }}
           GOARCH: amd64
           CGO_ENABLED: 0
           GO111MODULE: on
@@ -47,6 +51,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./kafka-console-avro-tools
-          asset_name: kafka-console-avro-tools
+          asset_path: ./kafka-console-avro-tools-${{ matrix.os }}
+          asset_name: kafka-console-avro-tools-${{ matrix.os }}
           asset_content_type: application/octet-stream
