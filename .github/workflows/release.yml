@@ -79,16 +79,17 @@ jobs:
             const artifacts = fs.readdirSync(path.resolve(process.env.GITHUB_WORKSPACE));
             const releaseId = ${{ steps.create_release.outputs.id }};
             for (const artifact of artifacts) {
-              if (artifact.startsWith('kafka-console-avro-tools-')) {
+              const artifactPath = path.resolve(process.env.GITHUB_WORKSPACE, artifact);
+              if (artifact.startsWith('kafka-console-avro-tools-') && fs.lstatSync(artifactPath).isFile()) {
                 await github.repos.uploadReleaseAsset({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
                   release_id: releaseId,
                   name: artifact,
-                  data: fs.readFileSync(path.resolve(process.env.GITHUB_WORKSPACE, artifact)),
+                  data: fs.readFileSync(artifactPath),
                   headers: {
                     'content-type': 'application/octet-stream',
-                    'content-length': fs.statSync(path.resolve(process.env.GITHUB_WORKSPACE, artifact)).size
+                    'content-length': fs.statSync(artifactPath).size
                   }
                 });
               }
