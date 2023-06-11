@@ -34,9 +34,9 @@ Flags:
 - `-b, --brokerList`: Kafka broker list (default: "localhost:9092")
 - `--schemaId`: Schema ID
 - `--schemaRegistryURL`: Schema Registry URL (default: "http://localhost:8081")
-- `-m, --msg`: Message
-- `-f, --file`: Filename
-- `-a, --auth`: Auth type (default: "wo")
+- `-m, --msg`: Message inline
+- `-f, --file`: Filename (path to file to use instead of message inline)
+- `-a, --auth`: Auth type (default: "wo"). For TLS, please specify "tls" value
 - `-x, --certDir`: Directory with TLS Certificates (default: "./")
 
 ### Consumer
@@ -50,7 +50,7 @@ Flags:
 - `-t, --topic`: Name of the topic (default: "output")
 - `-b, --brokerList`: Kafka broker list (default: "localhost:9092")
 - `-g, --group`: Consumer group (default: "kafka-console-avro-tools")
-- `-a, --auth`: Auth type (default: "wo")
+- `-a, --auth`: Auth type (default: "wo"). For TLS, please specify "tls" value
 - `-x, --certDir`: Directory with TLS Certificates (default: "./")
 - `--schemaRegistryURL`: Schema Registry URL (default: "http://localhost:8081")
 
