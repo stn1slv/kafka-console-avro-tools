@@ -4,6 +4,7 @@ import (
 	"encoding/binary"
 	"log"
 	"os"
+	"strings"
 
 	"github.com/Shopify/sarama"
 	goavro "github.com/linkedin/goavro/v2"
@@ -19,7 +20,9 @@ type producerOptions struct {
 	Message           string
 	MessageFromFile   string
 	Auth              string
-	TLSCertsDir       string
+	TLSclientCertFile string
+	TLSclientKeyFile  string
+	TLScaCertFile     string
 }
 
 func newProducerCommand() *cobra.Command {
@@ -40,7 +43,9 @@ func newProducerCommand() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.Message, "msg", "m", "", "Message")
 	cmd.Flags().StringVarP(&opts.MessageFromFile, "file", "f", "", "Filename")
 	cmd.Flags().StringVarP(&opts.Auth, "auth", "a", "wo", "Auth type")
-	cmd.Flags().StringVarP(&opts.TLSCertsDir, "certDir", "x", "./", "Directory with TLS Certificates")
+	cmd.Flags().StringVar(&opts.TLSclientCertFile, "certFile", "./client.cer.pem", "TLS certificate file (in pem format)")
+	cmd.Flags().StringVar(&opts.TLSclientKeyFile, "keyFile", "./client.key.pem", "TLS key file (in pem format)")
+	cmd.Flags().StringVar(&opts.TLScaCertFile, "caCertFile", "./server.cer.pem", "TLS CA certificate file (in pem format)")
 
 	return cmd
 }
@@ -55,9 +60,9 @@ func runProducer(opts *producerOptions) {
 	config.ClientID = "go-kafka-consumer"
 	config.Consumer.Return.Errors = true
 
-	if opts.Auth == "TLS" {
-		tlsConfig, err := NewTLSConfig(opts.TLSCertsDir+"client.cer.pem",
-			opts.TLSCertsDir+"client.key.pem", opts.TLSCertsDir+"server.cer.pem")
+	if strings.EqualFold(opts.Auth, "TLS") {
+		tlsConfig, err := NewTLSConfig(opts.TLSclientCertFile,
+			opts.TLSclientKeyFile, opts.TLScaCertFile)
 		failOnError(err, "Error creating TLS config")
 		config.Net.TLS.Enable = true
 		config.Net.TLS.Config = tlsConfig
