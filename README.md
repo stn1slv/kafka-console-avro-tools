@@ -34,6 +34,8 @@ Flags:
 - `-b, --brokerList`: Kafka broker list (default: "localhost:9092")
 - `--schemaId`: Schema ID
 - `--schemaRegistryURL`: Schema Registry URL (default: "http://localhost:8081")
+    - For Confluent Schema Registry, please specify "http://MY-REGISTRY-URL"
+    - For Apicurio Registry, please specify "http://MY-REGISTRY-URL/apis/ccompat/v7"
 - `-m, --msg`: Message
 - `-f, --file`: Filename
 - `-a, --auth`: Auth type (default: "wo"). Supported options:
@@ -55,6 +57,8 @@ Flags:
 - `-b, --brokerList`: Kafka broker list (default: "localhost:9092")
 - `-g, --group`: Consumer group (default: "kafka-console-avro-tools")
 - `--schemaRegistryURL`: Schema Registry URL (default: "http://localhost:8081")
+    - For Confluent Schema Registry, please specify "http://MY-REGISTRY-URL"
+    - For Apicurio Registry, please specify "http://MY-REGISTRY-URL/apis/ccompat/v7"
 - `-a, --auth`: Auth type (default: "wo"). Supported options:
     - `wo` - without authentication
     - `tls` - TLS/SSL authentication 
