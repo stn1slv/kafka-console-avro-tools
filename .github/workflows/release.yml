@@ -10,7 +10,7 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
-      - name: Set up Go
+      - name: Set up Go environment
         uses: actions/setup-go@v2
         with:
           go-version: 1.19
@@ -20,6 +20,9 @@ jobs:
         
       - name: Get dependencies
         run: go get -v -t -d ./...
+      
+      - name: Test
+        run: go test -v ./...
         
       - name: Build for Linux
         run: go build -v -o kafka-console-avro-tools-linux-amd64
@@ -30,7 +33,7 @@ jobs:
           GO111MODULE: on
       
       - name: Build for Windows
-        run: go build -v -o kafka-console-avro-tools-windows-amd64
+        run: go build -v -o kafka-console-avro-tools-windows-amd64.exe
         env:
           GOOS: windows
           GOARCH: amd64
@@ -82,8 +85,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./kafka-console-avro-tools-windows-amd64
-          asset_name: kafka-console-avro-tools-windows-amd64
+          asset_path: ./kafka-console-avro-tools-windows-amd64.exe
+          asset_name: kafka-console-avro-tools-windows-amd64.exe
           asset_content_type: application/octet-stream
       
       - name: Upload Release Asset for MacOS (AMD64)
