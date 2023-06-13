@@ -36,8 +36,12 @@ Flags:
 - `--schemaRegistryURL`: Schema Registry URL (default: "http://localhost:8081")
 - `-m, --msg`: Message
 - `-f, --file`: Filename
-- `-a, --auth`: Auth type (default: "wo")
-- `-x, --certDir`: Directory with TLS Certificates (default: "./")
+- `-a, --auth`: Auth type (default: "wo"). Supported options:
+    - `wo` - without authentication
+    - `tls` - TLS/SSL authentication
+- `--certFile`: TLS certificate file (in pem format) (default: "./client.cer.pem")
+- `--keyFile`: TLS key file (in pem format) (default: "./client.key.pem")
+- `--caCertFile`: TLS CA certificate file (in pem format) (default: "./server.cer.pem")
 
 ### Consumer
 
@@ -50,9 +54,13 @@ Flags:
 - `-t, --topic`: Name of the topic (default: "output")
 - `-b, --brokerList`: Kafka broker list (default: "localhost:9092")
 - `-g, --group`: Consumer group (default: "kafka-console-avro-tools")
-- `-a, --auth`: Auth type (default: "wo")
-- `-x, --certDir`: Directory with TLS Certificates (default: "./")
 - `--schemaRegistryURL`: Schema Registry URL (default: "http://localhost:8081")
+- `-a, --auth`: Auth type (default: "wo"). Supported options:
+    - `wo` - without authentication
+    - `tls` - TLS/SSL authentication 
+- `--certFile`: TLS certificate file (in pem format) (default: "./client.cer.pem")
+- `--keyFile`: TLS key file (in pem format) (default: "./client.key.pem")
+- `--caCertFile`: TLS CA certificate file (in pem format) (default: "./server.cer.pem")
 
 ### Testing
 
