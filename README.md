@@ -1,6 +1,8 @@
-# Kafka Avro Producer and Consumer
+# Kafka Console Avro Tools
 
-This application demonstrates how to use Kafka with Avro serialization and deserialization. It includes a producer and a consumer that can send and receive Avro-encoded messages using the Confluent Schema Registry.
+This application demonstrates how to use Kafka with Avro serialization and deserialization. It includes a producer and a consumer that can send and receive Avro-encoded messages using a Schema Registry. Supports the following Schema Registry:
+- Confluent Schema Registry
+- Apicurio Registry
 
 ## Prerequisites
 
