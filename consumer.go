@@ -11,7 +11,7 @@ import (
 	"sync"
 	"syscall"
 
-	"github.com/Shopify/sarama"
+	"github.com/IBM/sarama"
 	srclient "github.com/riferrei/srclient"
 	"github.com/spf13/cobra"
 )

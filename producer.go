@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/Shopify/sarama"
+	"github.com/IBM/sarama"
 	goavro "github.com/linkedin/goavro/v2"
 	srclient "github.com/riferrei/srclient"
 	"github.com/spf13/cobra"
