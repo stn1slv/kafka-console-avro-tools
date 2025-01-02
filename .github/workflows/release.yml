@@ -13,7 +13,7 @@ jobs:
       - name: Set up Go environment
         uses: actions/setup-go@v4
         with:
-          go-version: '1.20'
+          go-version: '1.23'
         
       - name: Checkout code
         uses: actions/checkout@v2
@@ -24,11 +24,19 @@ jobs:
       - name: Test
         run: go test -v ./...
         
-      - name: Build for Linux
+      - name: Build for Linux (AMD64)
         run: go build -v -o kafka-console-avro-tools-linux-amd64
         env:
           GOOS: linux
           GOARCH: amd64
+          CGO_ENABLED: 0
+          GO111MODULE: on
+
+      - name: Build for Linux (ARM64)
+        run: go build -v -o kafka-console-avro-tools-linux-arm64
+        env:
+          GOOS: linux
+          GOARCH: arm64
           CGO_ENABLED: 0
           GO111MODULE: on
       
@@ -67,7 +75,7 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Upload Release Asset for Linux
+      - name: Upload Release Asset for Linux (AMD64)
         id: upload-release-asset-linux
         uses: actions/upload-release-asset@v1
         env:
@@ -76,6 +84,17 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./kafka-console-avro-tools-linux-amd64
           asset_name: kafka-console-avro-tools-linux-amd64
+          asset_content_type: application/octet-stream
+
+      - name: Upload Release Asset for Linux (ARM64)
+        id: upload-release-asset-linux
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./kafka-console-avro-tools-linux-arm64
+          asset_name: kafka-console-avro-tools-linux-arm64
           asset_content_type: application/octet-stream
 
       - name: Upload Release Asset for Windows
