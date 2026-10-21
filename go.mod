@@ -2,6 +2,8 @@ module github.com/stn1slv/kafka-console-avro-tools
 
 go 1.26.0
 
+toolchain go1.26.10
+
 require (
 	github.com/IBM/sarama v1.61.1
 	github.com/linkedin/goavro/v2 v2.15.0
